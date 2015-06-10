@@ -1,0 +1,4 @@
+div.form-group
+  label(for="#{content.name}") #{content.label}
+  input.form-control(type="#{content.field.type}", id="#{content.name}", value="#{content.value}")
+  p.help-block #{content.help}
