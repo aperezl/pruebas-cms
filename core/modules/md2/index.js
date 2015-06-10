@@ -8,8 +8,6 @@ module.exports = function(app) {
 	}
 
 	module.init = function() {
-		console.log('m2 iniciado');
-		console.log(app.models.entity.get(4));
 	}
 	
 	module.router = function() {
@@ -38,7 +36,7 @@ module.exports = function(app) {
 		app.modules.form_api.addElement({
 			name: 'fieldset1',
 			type: 'fieldset'
-		});
+		}, req);
 
 		app.modules.form_api.addElement({
 			parent: 'fieldset1',
@@ -49,7 +47,7 @@ module.exports = function(app) {
 			placeholder: 'Texto campo 1',
 			help: 'help text for campo 1',
 			value: 'Valor 1'
-		});
+		}, req);
 
 		app.modules.form_api.addElement({
 			parent: 'fieldset1',
@@ -58,7 +56,7 @@ module.exports = function(app) {
 			label: 'Campo 3',
 			type: 'textfield',
 			value: 'Valor 2'
-		});
+		}, req);
 
 		app.modules.form_api.addElement({
 			parent: 'fieldset1',
@@ -67,13 +65,13 @@ module.exports = function(app) {
 			label: 'Campo 3',
 			type: 'textfield',
 			value: ''
-		});
+		}, req);
 
 		app.modules.form_api.addElement({
 			parent: 'fieldset1',
 			name: 'submit',
 			type: 'submit'
-		});
+		}, req);
 
 
 		var layout = app.modules.util.layout();
@@ -81,7 +79,7 @@ module.exports = function(app) {
 			name: 'frm1',
 			action: '/test',
 			method: 'post'
-		});
+		}, req);
 		app.modules.util.render(layout, res);
 		//res.send(layout);
 		//res.send(app.modules.form_api.getForm());

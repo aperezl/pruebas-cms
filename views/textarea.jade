@@ -1,0 +1,4 @@
+div.form-group
+  label(for="#{content.name}") #{content.label}
+  textarea.form-control(type="#{content.field.type}", id="#{content.name}", name="#{content.name}", value="#{content.value}", rows=10)
+  p.help-block #{content.help}

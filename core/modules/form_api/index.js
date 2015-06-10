@@ -13,6 +13,11 @@ module.exports = function(unuko) {
 				type: 'text'
 			}
 
+			_types['textarea'] = {
+				template: 'textarea',
+				type: 'textarea'
+			}
+
 			_types['submit'] = {
 				template: 'button',
 				type: 'submit'
@@ -22,7 +27,9 @@ module.exports = function(unuko) {
 				type: "fieldset"
 			}
 		},
-		addElement: function(obj) {
+		addElement: function(obj, req) {
+
+			req.form_api = req.form_api || {};
 
 			var element = {
 				name: obj.name,
@@ -38,19 +45,19 @@ module.exports = function(unuko) {
 				type: _types[obj.type].template,
 			}
 			if(obj.parent !== undefined ) {
-				_elements[obj.parent].childrens = _elements[obj.parent].childrens || {};
-				_elements[obj.parent].childrens[obj.name] =  element;
+				req.form_api[obj.parent].childrens = req.form_api[obj.parent].childrens || {};
+				req.form_api[obj.parent].childrens[obj.name] =  element;
 			} else {
-				_elements[obj.name] = element;
+				req.form_api[obj.name] = element;
 			}
 
 		},
-		getForm: function(obj) {
+		getForm: function(obj, req) {
 			var form = {
 				name: 'form',
 				type: 'form',
 				content: obj,
-				childrens: _elements
+				childrens: req.form_api
 			}
 			return form;
 		}
