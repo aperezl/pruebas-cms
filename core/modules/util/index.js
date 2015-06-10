@@ -96,7 +96,7 @@ module.exports = function(app) {
 	module.pre_render = function(page, cb) {
 		var output = "";
 
-		app.async.each(Object.keys(page.childrens),
+		app.contrib.async.each(Object.keys(page.childrens),
 			function(item, callback) {
 				console.log('item:' + page.childrens[item]);
 				if(page.childrens[item].childrens !== undefined) {
@@ -118,7 +118,7 @@ module.exports = function(app) {
 			},
 			function(err) {
 				if(err) console.log(err);
-				console.log('finalizado');
+				console.log('finalizado CC');
 				cb(output);
 			}
 		);

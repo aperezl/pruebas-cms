@@ -1,6 +1,10 @@
 var express = require('express');
 var app = express();
-app.async = require('async');
+
+app.contrib = {};
+app.contrib.async = require('async');
+app.contrib.nodemailer = require('nodemailer');
+
 app.set('view engine', 'jade');
 app.locals.pretty = true;
 app.set('view cache', false);
@@ -9,7 +13,7 @@ app.modules = {};
 var tmpModules = ['md2', 'md1', 'form_api', 'util'];
 //Carga de módulos
 for(var i in tmpModules) {
-	app.modules[tmpModules[i]] = require('./' + tmpModules[i])(app);
+	app.modules[tmpModules[i]] = require('./core/modules/' + tmpModules[i])(app);
 }
 
 var initModule = function(info) {

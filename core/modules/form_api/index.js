@@ -53,25 +53,6 @@ module.exports = function(unuko) {
 				childrens: _elements
 			}
 			return form;
-		},
-		render: function() {
-			var output = "";
-			async.each(Object.keys(_elements), 
-				function(item, callback) {
-					console.log(_elements[item].type);
-					app.render( _types[_elements[item].type].template, { content: _elements[item], field: _types[_elements[item].type] }, function(err, html) {
-						if(err) console.log(err);
-						output += html;
-						callback();	
-					});
-				},
-				function(err) {
-					if(err) console.log(err);
-					console.log('finalizado');
-					//cb(output);
-					console.log(output);
-				}
-			);
 		}
 	}
 }
