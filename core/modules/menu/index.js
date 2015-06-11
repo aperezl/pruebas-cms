@@ -8,7 +8,6 @@ module.exports = function(unuko) {
 	};
 
 	module.init = function() {
-		console.log('Probamos el inicio de menus');
 		for(var i in  unuko.modules) {
 			if(unuko.modules[i].router !== undefined) {
 				var r = unuko.modules[i].router();
