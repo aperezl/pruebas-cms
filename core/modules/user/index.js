@@ -9,7 +9,7 @@ module.exports = function(unuko) {
 	}
 
 	module.init = function() {
-		_user = unuko.modules.entity.newEntity();
+		_user = unuko.modules.entity.new();
 		
 		_user.define({
 			name: 'User'
@@ -26,11 +26,27 @@ module.exports = function(unuko) {
 		});
 
 		_user.generate();
-
+	
+	
+		
+		if(false) {	
+			_user.save({
+				username: 'demo2',
+				password: '1234'
+			}, function(obj) {
+				console.log('grabado correctamente');
+				_user.list(function(obj) {
+				});
+			});
+		}
+		
+		
+		/*
 		unuko.models.User.save({
 			username: 'admin',
 			password: 'demo'
 		});
+		*/
 	}
 
 	return module;

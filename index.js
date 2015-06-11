@@ -17,7 +17,7 @@ app.modules = {};
 app.models = {};
 var tmpModules = ['md2', 'md1', 'form_api', 'util', 'mail_api', 'menu', 'block', 'entity', 'user'];
 
-app.contrib.mongoose.connect('mongodb://prueba:prueba@ds033831.mongolab.com:33831/mean');
+app.contrib.mongoose.connect('mongodb://localhost/unuko-cms');
 
 app.contrib.mongoose.connection.on('open', function(){
 	//Carga de módulos
