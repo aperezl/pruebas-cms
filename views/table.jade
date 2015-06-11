@@ -1,0 +1,10 @@
+table.table.table-bordered
+  thead
+    tr
+      - for item in content.headers
+        th= item
+  tbody
+    - for object in content.rows
+      tr
+        for subobject in object
+          td !{subobject}

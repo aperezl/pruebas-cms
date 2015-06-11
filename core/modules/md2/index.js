@@ -16,6 +16,7 @@ module.exports = function(app) {
 				title: 'test',
 				method: 'get',
 				url: '/test',
+				menu: 'Test',
 				action: test
 			},
 			{

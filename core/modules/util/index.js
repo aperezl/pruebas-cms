@@ -1,4 +1,4 @@
-module.exports = function(app) {
+module.exports = function(unuko) {
 	var module = {};
 	module.info = function() {
 		return {
@@ -84,6 +84,7 @@ module.exports = function(app) {
 		return page;
 	};
 
+
 	module.render = function(layout, res) {
 		module.pre_render(layout, function(d) {
 			res.render('index', {content: d});
@@ -92,19 +93,19 @@ module.exports = function(app) {
 	module.pre_render = function(page, cb) {
 		var output = "";
 
-		app.contrib.async.each(Object.keys(page.childrens),
+		unuko.contrib.async.each(Object.keys(page.childrens),
 			function(item, callback) {
 				if(page.childrens[item].childrens !== undefined) {
 					module.pre_render(page.childrens[item], function(d) {
 						var content = page.childrens[item].content || {};
-						app.render(page.childrens[item].type, {childrens: d, content: content}, function(err, html) {
+						unuko.render(page.childrens[item].type, {childrens: d, content: content}, function(err, html) {
 							if(err) console.log(err);
 							output += html;
 							callback();	
 						});	
 					});
 				} else {
-					app.render(page.childrens[item].type, {content: page.childrens[item].content}, function(err, html) {
+					unuko.render(page.childrens[item].type, {content: page.childrens[item].content}, function(err, html) {
 						if(err) console.log(err);
 						output += html;
 						callback();	

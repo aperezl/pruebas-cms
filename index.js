@@ -8,12 +8,12 @@ app.contrib.bodyParser = require('body-parser');
 
 app.set('view engine', 'jade');
 app.locals.pretty = true;
-app.set('view cache', true);
+app.set('view cache', false);
 
 app.use(app.contrib.bodyParser.urlencoded({ extended: false }))
 
 app.modules = {};
-var tmpModules = ['md2', 'md1', 'form_api', 'util', 'mail_api'];
+var tmpModules = ['md2', 'md1', 'form_api', 'util', 'mail_api', 'menu', 'block'];
 //Carga de módulos
 for(var i in tmpModules) {
 	app.modules[tmpModules[i]] = require('./core/modules/' + tmpModules[i])(app);

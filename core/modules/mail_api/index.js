@@ -15,6 +15,7 @@ module.exports = function(unuko) {
 				title: 'Prueba de correo',
 				method: 'get',
 				url: '/mail',
+				menu: 'Mail',
 				action: prueba_correo
 			},
 			{
@@ -69,7 +70,6 @@ module.exports = function(unuko) {
 
 	var prueba_correo_submit = function(req, res) {
 		console.log(req.body);
-		res.send('enviar correo a ' + req.body.to);
 		var transporter = unuko.contrib.nodemailer.createTransport();
 		transporter.sendMail({
 		    from: 'info@unuko.com',
@@ -77,6 +77,7 @@ module.exports = function(unuko) {
 		    subject: req.body.subject,
 		    text: req.body.body
 		});
+		res.redirect('/mail');
 	}
 
 	return module;
