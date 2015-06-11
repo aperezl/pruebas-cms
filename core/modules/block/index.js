@@ -4,7 +4,7 @@ module.exports = function(unuko) {
 	module.info = function() {
 		return {
 			name: 'block'
-		}
+		};
 	};
 
 	module.init = function() {
