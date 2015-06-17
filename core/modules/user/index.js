@@ -4,7 +4,8 @@ module.exports = function(unuko) {
 	
 	module.info = function() {
 		return {
-			name: 'user'
+			name: 'user',
+			deps: ['entity']
 		}
 	}
 
@@ -49,5 +50,24 @@ module.exports = function(unuko) {
 		*/
 	}
 
+
+	module.router = function() {
+		console.log(_user.listLayout);
+		return [
+			{
+				title: 'User List',
+				method: 'get',
+				url: '/admin/users',
+				menu: 'User List',
+				action: _user.listLayout
+			},
+			{
+				title: 'New User',
+				method: 'get',
+				url: '/admin/users/new',
+				action: _user.newForm
+			}
+		]
+	}
 	return module;
 }
