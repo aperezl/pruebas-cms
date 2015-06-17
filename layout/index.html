@@ -55,11 +55,23 @@
 	}
 
 	.micontrol {
+		opacity: 0.1;
+	}
 
+	.micontrol:hover {
+		opacity: 1;
 	}
 	.micontrol-section {
 		margin-left: -15px;
 	}
+
+
+	.dropdown-submenu{position:relative;}
+.dropdown-submenu>.dropdown-menu{top:0;left:100%;margin-top:-6px;margin-left:-1px;-webkit-border-radius:0 6px 6px 6px;-moz-border-radius:0 6px 6px 6px;border-radius:0 6px 6px 6px;}
+.dropdown-submenu:hover>.dropdown-menu{display:block;}
+.dropdown-submenu>a:after{display:block;content:" ";float:right;width:0;height:0;border-color:transparent;border-style:solid;border-width:5px 0 5px 5px;border-left-color:#cccccc;margin-top:5px;margin-right:-10px;}
+.dropdown-submenu:hover>a:after{border-left-color:#ffffff;}
+.dropdown-submenu.pull-left{float:none;}.dropdown-submenu.pull-left>.dropdown-menu{left:-100%;margin-left:10px;-webkit-border-radius:6px 0 6px 6px;-moz-border-radius:6px 0 6px 6px;border-radius:6px 0 6px 6px;}
 
 </style>
 <script src="bower_components/angular/angular.min.js"></script>
@@ -71,19 +83,19 @@
 	var myApp = angular.module('myApp', ['ui.bootstrap']);
 
 	myApp.controller('GridCtrl', function($scope) {
-		$scope.layout = [
-			{
+		$scope.layout = {
+			section1: {
 				name: 'section-head',
-				zones: [
-					{
+				zones: {
+					zone1: {
 						name: 'zone1',
 						regions: {
 							r1: {class: 'col-md-12'}
 						}
 					}
-				]
+				}
 			},
-			{
+			section2: {
 				name: 'section-content',
 				zones: {
 					zone2: {
@@ -95,7 +107,7 @@
 					}
 				}
 			},
-			{
+			section3: {
 				name: 'section-foot',
 				zones: {
 					zone3: {
@@ -115,8 +127,17 @@
 					}
 				}
 			}
-		];
+		};
 
+		function guid() {
+		  function s4() {
+		    return Math.floor((1 + Math.random()) * 0x10000)
+		      .toString(16)
+		      .substring(1);
+		  }
+		  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+		    s4() + '-' + s4() + s4() + s4();
+		}
 
 		$scope.items = [
 			'New Zone',
@@ -125,12 +146,18 @@
 		];
 
 		$scope.alert = function($event, section) {
-			console.log($event);
 			console.log(section);
-			section.zones.push({
+			section.zones[guid()] = {
 				name: 'undefined',
 				regions: []
-			})
+			};
+		}
+
+		$scope.addZone = function(zone, cols) {
+			console.log(zone);
+			zone.regions[guid()] = {
+				class: 'col-md-' + cols 
+			}
 		}
 	 
 	});	
@@ -172,7 +199,7 @@
 			      <ul class="dropdown-menu">
 			        <li>
 			          <a href>Section</a>
-			          <a ng-click="alert($event, section);">alert</a>
+			          <a ng-click="alert($event, section);">New Zone</a>
 			        </li>
 			      </ul>
 			    </span>
@@ -190,6 +217,23 @@
 				      <ul class="dropdown-menu">
 				        <li>
 				          <a href>Zone</a>
+				        </li>
+				        <li class="dropdown-submenu">
+				        	<a href>New Region</a>
+				        	<ul class="dropdown-menu">
+				        		<li><a href ng-click="addZone(zone, 1)">1</a></li>
+				        		<li><a href ng-click="addZone(zone, 2)">2</a></li>
+				        		<li><a href ng-click="addZone(zone, 3)">3</a></li>
+				        		<li><a href ng-click="addZone(zone, 4)">4</a></li>
+				        		<li><a href ng-click="addZone(zone, 5)">5</a></li>
+				        		<li><a href ng-click="addZone(zone, 6)">6</a></li>
+				        		<li><a href ng-click="addZone(zone, 7)">7</a></li>
+				        		<li><a href ng-click="addZone(zone, 8)">8</a></li>
+				        		<li><a href ng-click="addZone(zone, 9)">9</a></li>
+				        		<li><a href ng-click="addZone(zone, 10)">10</a></li>
+				        		<li><a href ng-click="addZone(zone, 11)">11</a></li>
+				        		<li><a href ng-click="addZone(zone, 12)">12</a></li>
+				        	</ul>
 				        </li>
 				      </ul>
 				    </span>
@@ -212,6 +256,23 @@
 							        <li>
 							          <a href>Region</a>
 							        </li>
+							        <li class="dropdown-submenu">
+						        	<a href>Resize Region</a>
+						        	<ul class="dropdown-menu">
+						        		<li><a href ng-click="addZone(zone, 1)">1</a></li>
+						        		<li><a href ng-click="addZone(zone, 2)">2</a></li>
+						        		<li><a href ng-click="addZone(zone, 3)">3</a></li>
+						        		<li><a href ng-click="addZone(zone, 4)">4</a></li>
+						        		<li><a href ng-click="addZone(zone, 5)">5</a></li>
+						        		<li><a href ng-click="addZone(zone, 6)">6</a></li>
+						        		<li><a href ng-click="addZone(zone, 7)">7</a></li>
+						        		<li><a href ng-click="addZone(zone, 8)">8</a></li>
+						        		<li><a href ng-click="addZone(zone, 9)">9</a></li>
+						        		<li><a href ng-click="addZone(zone, 10)">10</a></li>
+						        		<li><a href ng-click="addZone(zone, 11)">11</a></li>
+						        		<li><a href ng-click="addZone(zone, 12)">12</a></li>
+						        	</ul>
+						        </li>
 							      </ul>
 							    </span>
 							</div>
