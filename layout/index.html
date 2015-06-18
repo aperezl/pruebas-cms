@@ -31,6 +31,7 @@
 		margin: 0 auto;
 		z-index: -1000;
 	}
+
 	.section-grid .col-md-1 .grid-bk {
 		background: red;
 		height: 600px;
@@ -77,10 +78,12 @@
 <script src="bower_components/angular/angular.min.js"></script>
 <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 <script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+<script src="bower_components/angular-sortable-view/src/angular-sortable-view.min.js"></script>
+
 
 
 <script type="text/javascript">
-	var myApp = angular.module('myApp', ['ui.bootstrap']);
+	var myApp = angular.module('myApp', ['ui.bootstrap', 'angular-sortable-view']);
 
 	myApp.controller('GridCtrl', function($scope) {
 		$scope.layout = {
@@ -89,9 +92,9 @@
 				zones: {
 					zone1: {
 						name: 'zone1',
-						regions: {
-							r1: {class: 'col-md-12'}
-						}
+						regions: [
+							{name: 'r1', class: 'col-md-12'}
+						]
 					}
 				}
 			},
@@ -100,10 +103,10 @@
 				zones: {
 					zone2: {
 						name: 'zone2',
-						regions: {
-							r1: {class: 'col-md-3'},
-							r2: {class: 'col-md-9'}
-						}
+						regions: [
+							{name: 'r1', class: 'col-md-3'},
+							{name: 'r2', class: 'col-md-9'}
+						]
 					}
 				}
 			},
@@ -112,22 +115,23 @@
 				zones: {
 					zone3: {
 						name: 'zone3',
-						regions: {
-							r1: {class: 'col-md-4'},
-							r2: {class: 'col-md-4'},
-							r3: {class: 'col-md-4'}
-						}
+						regions: [
+							{name: 'r1', class: 'col-md-4'},
+							{name: 'r2', class: 'col-md-4'},
+							{name: 'r3', class: 'col-md-4'}
+						]
 					},
 					zone4: {
 						name: 'zone4',
-						regions: {
-							r1: {class: 'col-md-12'}
-						}
-
+						regions: [
+							{name: 'r1', class: 'col-md-12'}
+						]		
 					}
 				}
 			}
 		};
+
+
 
 		function guid() {
 		  function s4() {
@@ -149,16 +153,73 @@
 			console.log(section);
 			section.zones[guid()] = {
 				name: 'undefined',
-				regions: []
+				regions: {}
 			};
 		}
 
 		$scope.addZone = function(zone, cols) {
-			console.log(zone);
-			zone.regions[guid()] = {
+			var g = guid();
+			zone.regions[g] = {
+				name: g,
 				class: 'col-md-' + cols 
 			}
 		}
+
+		$scope.modZone = function(zone, region, cols) {
+			console.log(region);
+			zone.regions[region.name] = {
+				name: region.name,
+				class: 'col-md-' + cols
+			}
+			console.log(region);
+		}
+
+		$scope.dragControlListeners = {
+		    accept: function (sourceItemHandleScope, destSortableScope) {
+		    	return boolean},
+		    itemMoved: function (event) {
+		    	//Do what you want
+			},
+			   orderChanged: function(event) {
+			    //Do what you want
+			},
+			    containment: '#board'//optional param.
+			};
+
+		function getArray(size, prefix){
+			var arr = [];
+			prefix = prefix || '';
+			for(var i=0;i<size;i++){
+				arr.push(prefix + i);
+			}
+			return arr;
+		}
+
+				$scope.data = {
+				items1: getArray(20, '1.'),
+				items2: getArray(20, '2.'),
+				items3: getArray(6, '3.'),
+				items4: getArray(20, '4.'),
+				items5: [
+					getArray(8, '5.'),
+					getArray(8, '6.'),
+					getArray(8, '7.'),
+					getArray(0, '8.'),	
+				],
+				items6: getArray(10, '9.'),
+				items7: getArray(7, '10.'),
+				items8: getArray(10, '11.'),
+				items9: getArray(7, '12.'),
+			};
+
+			$scope.objs = [
+				{
+					name: 'obj1'
+				},
+				{
+					name: 'obj2'
+				}
+			];
 	 
 	});	
 </script>
@@ -187,9 +248,16 @@
 			</div>
 		</section>
 
+
+<div class="sortable-container" sv-root sv-part="objs">
+	<div ng-repeat="item in objs" sv-element="opts" class="wells">
+		{{item}}
+	</div>
+</div>
+
 		
 		<section ng-repeat="section in layout" ng-click="menuSection($event)" class="{{section.name}} section" style="background: #a0cFE1">
-			<div class="container">
+			<div class="container" sv-root>
 			<div class="micontrol micontrol-section">
 			    <!-- Simple dropdown -->
 			    <span class="dropdown" dropdown on-toggle="toggled(open)">
@@ -206,7 +274,7 @@
 			</div>
 
 
-				<div ng-repeat="zone in section.zones" class="row bloque">
+				<div ng-repeat="zone in section.zones" class="row bloque" sv-part="zone.regions">
 
 				<div class="micontrol">
 		    		<!-- Simple dropdown -->
@@ -239,7 +307,7 @@
 				    </span>
 				</div>
 
-					<div ng-repeat="region in zone.regions" class="{{region.class}}">
+					<div ng-repeat="region in zone.regions" class="{{region.class}}" sv-element>
 
 
 
@@ -259,18 +327,18 @@
 							        <li class="dropdown-submenu">
 						        	<a href>Resize Region</a>
 						        	<ul class="dropdown-menu">
-						        		<li><a href ng-click="addZone(zone, 1)">1</a></li>
-						        		<li><a href ng-click="addZone(zone, 2)">2</a></li>
-						        		<li><a href ng-click="addZone(zone, 3)">3</a></li>
-						        		<li><a href ng-click="addZone(zone, 4)">4</a></li>
-						        		<li><a href ng-click="addZone(zone, 5)">5</a></li>
-						        		<li><a href ng-click="addZone(zone, 6)">6</a></li>
-						        		<li><a href ng-click="addZone(zone, 7)">7</a></li>
-						        		<li><a href ng-click="addZone(zone, 8)">8</a></li>
-						        		<li><a href ng-click="addZone(zone, 9)">9</a></li>
-						        		<li><a href ng-click="addZone(zone, 10)">10</a></li>
-						        		<li><a href ng-click="addZone(zone, 11)">11</a></li>
-						        		<li><a href ng-click="addZone(zone, 12)">12</a></li>
+						        		<li><a href ng-click="modZone(zone, region, 1)">1</a></li>
+						        		<li><a href ng-click="modZone(zone, region, 2)">2</a></li>
+						        		<li><a href ng-click="modZone(zone, region, 3)">3</a></li>
+						        		<li><a href ng-click="modZone(zone, region, 4)">4</a></li>
+						        		<li><a href ng-click="modZone(zone, region, 5)">5</a></li>
+						        		<li><a href ng-click="modZone(zone, region, 6)">6</a></li>
+						        		<li><a href ng-click="modZone(zone, region, 7)">7</a></li>
+						        		<li><a href ng-click="modZone(zone, region, 8)">8</a></li>
+						        		<li><a href ng-click="modZone(zone, region, 9)">9</a></li>
+						        		<li><a href ng-click="modZone(zone, region, 10)">10</a></li>
+						        		<li><a href ng-click="modZone(zone, region, 11)">11</a></li>
+						        		<li><a href ng-click="modZone(zone, region, 12)">12</a></li>
 						        	</ul>
 						        </li>
 							      </ul>
