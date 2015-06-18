@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link type="text/css" rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="bower_components/angularjs-color-picker/angularjs-color-picker.min.css" />
+
+	<style type="text/css">
+
+
+
+	.bloque {
+		background-color: rgba(255, 255, 255, 0.5);
+	}
+	.bloque:hover {
+		
+		background-color: #f0f0f0;
+		background-color: rgba(255, 255, 255, 1);
+		
+	}
+	.bq {
+		background: #e0e0e0;
+		height: 80px;
+		margin: 10px 0;
+	}
+	.bq:hover {
+		/*background: #f0f050;*/
+	}
+	.section-grid {
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		margin: 0 auto;
+		z-index: -1000;
+	}
+
+	.section-grid .col-md-1 .grid-bk {
+		/*background: red;*/
+		height: 600px;
+		opacity: .25;
+	}
+
+
+	.config {
+		text-align: right;
+	}
+
+	.config .controls {
+		display: inline-block;
+		background: rebeccapurple;
+		width: 30px;
+		position: absolute;
+		z-index: 1000;
+	}
+
+	.section {
+		min-height: 30px;
+	}
+
+	.micontrol {
+		opacity: 0.1;
+	}
+
+	.micontrol:hover {
+		opacity: 1;
+	}
+	.micontrol-section {
+		margin-left: -15px;
+	}
+
+
+	.dropdown-submenu{position:relative;}
+.dropdown-submenu>.dropdown-menu{top:0;left:100%;margin-top:-6px;margin-left:-1px;-webkit-border-radius:0 6px 6px 6px;-moz-border-radius:0 6px 6px 6px;border-radius:0 6px 6px 6px;}
+.dropdown-submenu:hover>.dropdown-menu{display:block;}
+.dropdown-submenu>a:after{display:block;content:" ";float:right;width:0;height:0;border-color:transparent;border-style:solid;border-width:5px 0 5px 5px;border-left-color:#cccccc;margin-top:5px;margin-right:-10px;}
+.dropdown-submenu:hover>a:after{border-left-color:#ffffff;}
+.dropdown-submenu.pull-left{float:none;}.dropdown-submenu.pull-left>.dropdown-menu{left:-100%;margin-left:10px;-webkit-border-radius:6px 0 6px 6px;-moz-border-radius:6px 0 6px 6px;border-radius:6px 0 6px 6px;}
+
+</style>
+<script src="bower_components/angular/angular.min.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+<script src="bower_components/angular-sortable-view/src/angular-sortable-view.js"></script>
+<script src="bower_components/tinycolor/tinycolor.js"></script>
+<script src="bower_components/angularjs-color-picker/angularjs-color-picker.min.js"></script>
+
+
+<script type="text/javascript">
+	var myApp = angular.module('myApp', ['ui.bootstrap', 'angular-sortable-view', 'color.picker']);
+
+	myApp.controller('GridCtrl', function($scope, $modal) {
+		$scope.layout = {
+			section1: {
+				name: 'section-head',
+				zones: []
+			},
+			section2: {
+				name: 'section-content',
+				zones: [
+					{
+						name: 'zone2',
+						regions: [
+							{name: 'r1', class: 'col-md-3'},
+							{name: 'r2', class: 'col-md-9'}
+						]
+					}
+				]
+			},
+			section3: {
+				name: 'section-foot',
+				zones: [
+					{
+						name: 'zone3',
+						regions: [
+							{name: 'r1', class: 'col-md-4'},
+							{name: 'r2', class: 'col-md-4'},
+							{name: 'r3', class: 'col-md-4'}
+						]
+					},
+					{
+						name: 'zone4',
+						regions: [
+							{name: 'r1', class: 'col-md-12'}
+						]		
+					}
+				]
+			}
+		};
+
+
+
+		function guid() {
+		  function s4() {
+		    return Math.floor((1 + Math.random()) * 0x10000)
+		      .toString(16)
+		      .substring(1);
+		  }
+		  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+		    s4() + '-' + s4() + s4() + s4();
+		}
+
+		$scope.items = [
+			'New Zone',
+			'Change CSS',
+			'Delete Section'
+		];
+
+		$scope.addZone = function($event, section) {
+			console.log(section);
+			var g = guid();
+			section.zones.push({
+				name: g,
+				regions: []
+			});
+		}
+
+		$scope.deleteZone = function(section, zone) {
+			var index = section.zones.indexOf(zone);
+			if(index > -1) {
+				section.zones.splice(index, 1);
+			}
+		}
+
+		$scope.addRegion = function(zone, cols) {
+			var g = guid();
+			zone.regions.push({
+				name: g,
+				class: 'col-md-' + cols 
+			});
+		}
+
+		$scope.modRegion = function(zone, region, cols) {
+			console.log(region);
+			region = {
+				name: region.name,
+				class: 'col-md-' + cols
+			}
+			zone.regions.map(function(v) {
+				if(v.name === region.name) {
+					v.class = 'col-md-' + cols;
+				}
+			});
+			console.log(region);
+		}
+
+		$scope.deleteRegion = function(zone, region) {
+			var index = zone.regions.indexOf(region);
+			if(index > -1) {
+				zone.regions.splice(index, 1);
+			} 
+		}
+
+
+		$scope.open = function (size) {
+
+		    var modalInstance = $modal.open({
+		      animation: $scope.animationsEnabled,
+		      templateUrl: 'myModalContent.html',
+		      controller: 'GridCtrl',
+		      size: size,
+		      resolve: {
+		        items: function () {
+		          return $scope.items;
+		        }
+		      }
+		    });
+		}
+	 
+	});	
+</script>
+</head>
+	<body ng-controller="GridCtrl">
+	
+
+		<section class="section-grid">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-1"><div class="grid-bk"></div></div>
+					<div class="col-md-1"><div class="grid-bk"></div></div>
+					<div class="col-md-1"><div class="grid-bk"></div></div>
+					<div class="col-md-1"><div class="grid-bk"></div></div>
+					<div class="col-md-1"><div class="grid-bk"></div></div>
+					<div class="col-md-1"><div class="grid-bk"></div></div>
+					<div class="col-md-1"><div class="grid-bk"></div></div>
+					<div class="col-md-1"><div class="grid-bk"></div></div>
+					<div class="col-md-1"><div class="grid-bk"></div></div>
+					<div class="col-md-1"><div class="grid-bk"></div></div>
+					<div class="col-md-1"><div class="grid-bk"></div></div>
+					<div class="col-md-1"><div class="grid-bk"></div></div>
+				</div>
+			</div>
+		</section>
+
+
+		
+		<section ng-repeat="section in layout" ng-click="menuSection($event)" class="{{section.name}} section" style="">
+			<hr />
+			<div class="container" sv-root>
+			<div class="micontrol micontrol-section">
+			    <!-- Simple dropdown -->
+			    <span class="dropdown" dropdown on-toggle="toggled(open)">
+			      <a href class="dropdown-toggle btn btn-default btn-xs" dropdown-toggle>
+			        Section <span class="glyphicon glyphicon-cog"></span>
+			      </a>
+			      <ul class="dropdown-menu">
+			        <li>
+			          <a ng-click="addZone($event, section);">New Zone</a>
+			        </li>
+			        <li>
+			        	<a href ng-click="open('sm')">Properties</a>
+			        </li>
+			      </ul>
+			    </span>
+			</div>
+
+
+				<div ng-repeat="zone in section.zones" class="row bloque" sv-part="zone.regions">
+
+				<div class="micontrol">
+		    		<!-- Simple dropdown -->
+				    <span class="dropdown" dropdown on-toggle="toggled(open)">
+				      <a href class="dropdown-toggle btn btn-default btn-xs" dropdown-toggle>
+				        Zone <span class="glyphicon glyphicon-cog"></span>
+				      </a>
+				      <ul class="dropdown-menu">
+
+				        <li class="dropdown-submenu">
+				        	<a href>New Region</a>
+				        	<ul class="dropdown-menu">
+				        		<li><a href ng-click="addRegion(zone, 1)">1</a></li>
+				        		<li><a href ng-click="addRegion(zone, 2)">2</a></li>
+				        		<li><a href ng-click="addRegion(zone, 3)">3</a></li>
+				        		<li><a href ng-click="addRegion(zone, 4)">4</a></li>
+				        		<li><a href ng-click="addRegion(zone, 5)">5</a></li>
+				        		<li><a href ng-click="addRegion(zone, 6)">6</a></li>
+				        		<li><a href ng-click="addRegion(zone, 7)">7</a></li>
+				        		<li><a href ng-click="addRegion(zone, 8)">8</a></li>
+				        		<li><a href ng-click="addRegion(zone, 9)">9</a></li>
+				        		<li><a href ng-click="addRegion(zone, 10)">10</a></li>
+				        		<li><a href ng-click="addRegion(zone, 11)">11</a></li>
+				        		<li><a href ng-click="addRegion(zone, 12)">12</a></li>
+				        	</ul>
+				        </li>
+				        <li>
+				          <a href ng-click="deleteZone(section, zone)">Delete Zone</a>
+				        </li>
+				        <li>
+				          <a href>Properties</a>
+				        </li>
+				      </ul>
+				    </span>
+				</div>
+
+					<div ng-repeat="region in zone.regions" class="{{region.class}}" sv-element>
+
+
+
+
+						<div class="bq">
+
+							<div class="micontrol">
+								<div class="btn-group">
+						    		<!-- Simple dropdown -->
+								    <span class="dropdown btn btn-default btn-xs" dropdown on-toggle="toggled(open)">
+								      <span href class="dropdown-toggle" dropdown-toggle>
+								      	Region <span class=" glyphicon glyphicon-cog"></span>
+								      </span>
+								      <ul class="dropdown-menu">
+								        <li class="dropdown-submenu">
+							        	<a href>Resize Region</a>
+								        	<ul class="dropdown-menu">
+								        		<li><a href ng-click="modRegion(zone, region, 1)">1</a></li>
+								        		<li><a href ng-click="modRegion(zone, region, 2)">2</a></li>
+								        		<li><a href ng-click="modRegion(zone, region, 3)">3</a></li>
+								        		<li><a href ng-click="modRegion(zone, region, 4)">4</a></li>
+								        		<li><a href ng-click="modRegion(zone, region, 5)">5</a></li>
+								        		<li><a href ng-click="modRegion(zone, region, 6)">6</a></li>
+								        		<li><a href ng-click="modRegion(zone, region, 7)">7</a></li>
+								        		<li><a href ng-click="modRegion(zone, region, 8)">8</a></li>
+								        		<li><a href ng-click="modRegion(zone, region, 9)">9</a></li>
+								        		<li><a href ng-click="modRegion(zone, region, 10)">10</a></li>
+								        		<li><a href ng-click="modRegion(zone, region, 11)">11</a></li>
+								        		<li><a href ng-click="modRegion(zone, region, 12)">12</a></li>
+								        	</ul>
+								        </li>
+										<li>
+								          <a href ng-click="deleteRegion(zone, region)">Delete Region</a>
+								        </li>
+										<li>
+								          <a href>Properties</a>
+								        </li>
+								      </ul>
+								    </span>
+								    <a href class="btn btn-default btn-xs" sv-handle>
+								    	 <span class="glyphicon glyphicon-move"></span>
+								    </a>
+								   </div>
+							</div>
+
+
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+
+    <script type="text/ng-template" id="myModalContent.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Im a modal!</h3>
+        </div>
+        <div class="modal-body">
+        	<form class="form-horizontal" role="form">
+        		<div class="form-group">
+        			<label class="control-label col-sm-2" for="email">Name:</label>
+        			<div class="col-sm-10">
+        				<input type="text" class="form-control" id="name">
+        			</div>
+        		</div>
+        		<div class="form-group">
+        			<label class="control-label col-sm-2" for="email">Name:</label>
+        			<div class="col-sm-10">
+        				<color-picker ng-model="color"></color-picker>
+        			</div>
+        		</div>
+        	</form>
+           
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+    </script>
+    
+
+
+		<script type="text/javascript">
+			var body = document.body,
+		    html = document.documentElement;
+
+			var height = Math.max( body.scrollHeight, body.offsetHeight, 
+		                       html.clientHeight, html.scrollHeight, html.offsetHeight );
+			var grids = document.getElementsByClassName("grid-bk");
+			for(var i=0; i<grids.length; i++) {
+				grids[i].style.height = height + 'px';
+			}
+		</script>
+	</body>
+</html>

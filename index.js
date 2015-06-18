@@ -5,21 +5,22 @@ app.contrib = {};
 app.contrib.async = require('async');
 app.contrib.nodemailer = require('nodemailer');
 app.contrib.bodyParser = require('body-parser');
-app.contrib.mongoose = require('mongoose');
+//app.contrib.mongoose = require('mongoose');
 
 app.set('view engine', 'jade');
 app.locals.pretty = true;
 app.set('view cache', false);
 
+app.use(express.static('public'));
 app.use(app.contrib.bodyParser.urlencoded({ extended: false }))
 
 app.modules = {};
 app.models = {};
-var tmpModules = ['md2', 'md1', 'form_api', 'util', 'mail_api', 'menu', 'block', 'entity', 'user'];
+var tmpModules = ['md2', 'md1', 'form_api', 'util', 'mail_api', 'menu', 'block'];
 
-app.contrib.mongoose.connect('mongodb://localhost/unuko-cms');
+//app.contrib.mongoose.connect('mongodb://localhost/unuko-cms');
 
-app.contrib.mongoose.connection.on('open', function(){
+//app.contrib.mongoose.connection.on('open', function(){
 	//Carga de módulos
 	for(var i in tmpModules) {
 		app.modules[tmpModules[i]] = require('./core/modules/' + tmpModules[i])(app);
@@ -61,7 +62,16 @@ app.contrib.mongoose.connection.on('open', function(){
 		}
 	}
 	app.listen(3000);
-});
-app.contrib.mongoose.connection.on('error', function(error){
-  throw new Error(error);
-});
+
+	app.get('/', function(req, res) {
+		//var layout = app.modules.util.layout();
+		//app.modules.util.layout(layout, res);
+		var layout = app.modules.util.layout();
+		app.modules.util.render(layout, res);
+		//res.send(app.modules.util.layout());
+	})
+	
+//});
+//app.contrib.mongoose.connection.on('error', function(error){
+//  throw new Error(error);
+//});

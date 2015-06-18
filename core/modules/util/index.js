@@ -1,5 +1,14 @@
 module.exports = function(unuko) {
 	var module = {};
+	var page = {
+		name: 'page',
+		childrens: {},
+		section: {},
+		zone: {},
+		region: {},
+		block: {}
+	};
+
 	module.info = function() {
 		return {
 			name: 'util'
@@ -7,72 +16,75 @@ module.exports = function(unuko) {
 	};
 	module.init = function() {}
 
+	module.item = function(name, type, parent, parentType) {
+		page[type][name] = {
+			name: name,
+			type: type,
+			content: {} 
+		}
+		if(parent!==undefined) {
+			page[parentType][parent].childrens = page[parentType][parent].childrens || {};
+			page[parentType][parent].childrens[name] = page[type][name];
+		} else {
+			page.childrens[name] = page[type][name];
+		}
+	}
+
+	module.sections = function(name) {
+		module.item(name, 'section');
+	}
+
+	module.zones = function(name, parent) {
+		module.item(name, 'zone', parent, 'section');
+	}
+
+	module.regions = function(name, parent) {
+		module.item(name, 'region', parent, 'zone');
+	}
+
+	module.blocks = function(name, parent, content) {
+		module.item(name, 'block', parent, 'region');
+		page['block'][name].content = content;
+	}
+
+	module.attrs = function(name, type, attrs) {
+		page[type][name]['attrs'] = attrs;
+	}
+
 	module.layout = function() {
-		var page = {
-			name: 'page',
-			childrens: {}
-		};
 
-
-		page.sections = {};
-		page.zones = {};
-		page.regions = {};
-		page.blocks = {};
 
 		//Creación de las secciones
-		page.sections['head'] = { name: 'head', type: 'section',  content: {title: 'Bloque 1'} };
-		page.sections['content'] =  { name: 'content', type: 'section',  content: {title: 'Bloque 1'} };
-		page.sections['foot'] = { name: 'foot', type: 'section',  content: {title: 'Bloque 1'} };
+		module.sections('head');
+		module.sections('content');
+		module.sections('foot');
 
 		//Creación de las zonas
-		page.zones['head_z'] = {name: 'head_z', type: 'zone', content: {}};
-		page.zones['content_z'] = {name: 'content_z', type: 'zone', content: {}};
-		page.zones['foot_z'] = {name: 'foot_z', type: 'zone', content: {}};
-
+		module.zones('head', 'head');
+		module.zones('content', 'content');
+		module.zones('foot', 'foot');
+		
 		//Creación de las regiones
-		page.regions['head_r'] = {name: 'head_r', type: 'region', content: {}};
-		page.regions['content_r'] = {name: 'content_r', type: 'region', content: {}};
-		page.regions['foot_r'] = {name: 'foot_r', type: 'region', content: {}};
-
-		//Colocando algún block de prueba
-		page.blocks['navbar'] = {name: 'navbar', type: 'navbar', content: {}};
-		page.blocks['sidebar'] = {name: 'sidebar', type: 'block', content: {main: 'Bloque 1'}};
-		page.blocks['main_form'] = {name: 'main_form', type: 'block', content: {main: 'Bloque 3'}};
+		module.regions('head', 'head');
+		module.regions('sidebar', 'content');
+		module.regions('main', 'content');
+		module.regions('foot', 'foot');
 
 
 
-		//Añadir las regiones a las zonas
-		page.zones['head_z'].childrens = {};
-		page.zones['content_z'].childrens = {};
-		page.zones['foot_z'].childrens = {};
-		page.zones['head_z'].childrens['head_r'] = page.regions['head_r'];
-		page.zones['content_z'].childrens['content_r'] = page.regions['content_r'];
-		page.zones['foot_z'].childrens['foot_r'] = page.regions['foot_r'];
+		module.blocks('sidebar', 'sidebar',  {main: 'Bloque 1'});
+		module.blocks('main', 'main', {main: '<ul as-sortable="sortableOptions" ng-model="items"><li ng-repeat="item in items" as-sortable-item class="as-sortable-item"><div as-sortable-item-handle class="as-sortable-item-handle" style="height:50px"><span data-ng-bind="item.name"></span></div></li></ul>'});
 
+		module.attrs('head', 'section', {class: 'clase1 clase2'});
 
-		//Añadir las zonas a las secciones
-		page.sections['head'].childrens = {};
-		page.sections['content'].childrens = {};
-		page.sections['foot'].childrens = {};
-		page.sections['head'].childrens['head_z'] = page.zones['head_z'];
-		page.sections['content'].childrens['content_z'] = page.zones['content_z'];
-		page.sections['foot'].childrens['foot_z'] = page.zones['foot_z'];
+		module.attrs('head', 'zone', {class: 'zone row'});
+		module.attrs('content', 'zone', {class: 'zone row'});
+		module.attrs('foot', 'zone', {class: 'zone row'});
 
-		//Definición de bloques
-		page.blocks['navbar'] = {name: 'navbar', type: 'navbar', content: {}};
-		page.blocks['sidebar'] = {name: 'sidebar', type: 'block', content: {main: 'Bloque 1'}};
-		//Carga de bloques en cada region
-		page.regions['head_r'].childrens = {};
-		page.regions['head_r'].childrens['navbar'] = page.blocks['navbar'];
-		page.regions['content_r'].childrens = {};
-		page.regions['content_r'].childrens['sidebar'] = page.blocks['sidebar'];
-
-		page.childrens = page.sections;
-		//page.childrens['head'] = { name: 'head', type: 'section',  content: {title: 'Bloque 1'} };
-		//page.childrens['head'].childrens = {};
-		//page.childrens['head'].childrens['navbar'] = {name: 'navbar', type: 'navbar', content: {}};
-		//page.childrens['content'] = { name: 'content', type: 'section',  content: {title: 'Bloque 1'} };
-		//page.childrens['foot'] = { name: 'foot', type: 'section',  content: {title: 'Bloque 1'} };
+		module.attrs('head', 'region', {class: 'col-md-12'});
+		module.attrs('sidebar', 'region', {class: 'col-md-4'});
+		module.attrs('main', 'region', {class: 'col-md-8'});
+		module.attrs('foot', 'region', {class: 'col-md-12'});
 
 		//page.childrens['content'].childrens = {};
 		//page.childrens['content'].childrens['sidebar'] = {name: 'sidebar', type: 'block', content: {main: 'Bloque 1'}};
@@ -98,14 +110,15 @@ module.exports = function(unuko) {
 				if(page.childrens[item].childrens !== undefined) {
 					module.pre_render(page.childrens[item], function(d) {
 						var content = page.childrens[item].content || {};
-						unuko.render(page.childrens[item].type, {childrens: d, content: content}, function(err, html) {
+						var attrs = page.childrens[item].attrs || {};
+						unuko.render(page.childrens[item].type, {childrens: d, content: content, attrs: attrs}, function(err, html) {
 							if(err) console.log(err);
 							output += html;
 							callback();	
 						});	
 					});
 				} else {
-					unuko.render(page.childrens[item].type, {content: page.childrens[item].content}, function(err, html) {
+					unuko.render(page.childrens[item].type, {content: page.childrens[item].content, attrs: page.childrens[item].attrs}, function(err, html) {
 						if(err) console.log(err);
 						output += html;
 						callback();	

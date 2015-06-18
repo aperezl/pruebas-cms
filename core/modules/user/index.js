@@ -59,7 +59,7 @@ module.exports = function(unuko) {
 				method: 'get',
 				url: '/admin/users',
 				menu: 'User List',
-				action: _user.listLayout
+				action: ly
 			},
 			{
 				title: 'New User',
@@ -68,6 +68,9 @@ module.exports = function(unuko) {
 				action: _user.newForm
 			}
 		]
+	}
+	var ly = function(req, res) {
+		res.send('ok');
 	}
 	return module;
 }
