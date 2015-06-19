@@ -37,7 +37,9 @@ module.exports = function(unuko) {
 		module.blocks('sidebar', 'sidebar',  {main: 'Bloque 1'});
 		module.blocks('main', 'main', {main: '<ul as-sortable="sortableOptions" ng-model="items"><li ng-repeat="item in items" as-sortable-item class="as-sortable-item"><div as-sortable-item-handle class="as-sortable-item-handle" style="height:50px"><span data-ng-bind="item.name"></span></div></li></ul>'});
 
-		module.attrs('head', 'section', {class: 'clase1 clase2'});
+		module.attrs('head', 'section', {class: 'head'});
+		module.attrs('content', 'section', {class: 'content'});
+		module.attrs('foot', 'section', {class: 'foot'});
 
 		module.attrs('head', 'zone', {class: 'zone row'});
 		module.attrs('content', 'zone', {class: 'zone row'});
@@ -87,18 +89,12 @@ module.exports = function(unuko) {
 	}
 
 	module.layout = function() {
-
-
-
-		//page.childrens['content'].childrens = {};
-		//page.childrens['content'].childrens['sidebar'] = {name: 'sidebar', type: 'block', content: {main: 'Bloque 1'}};
-		//page.childrens['content'].childrens['main'] = {name: 'main', type: 'block', content: {main: '<ul as-sortable="sortableOptions" ng-model="items"><li ng-repeat="item in items" as-sortable-item class="as-sortable-item"><div as-sortable-item-handle class="as-sortable-item-handle" style="height:50px"><span data-ng-bind="item.name"></span></div></li></ul>'}};
-
-		//page.childrens['foot'].childrens = {};
-		//page.childrens['content'].childrens['main_form'] = {name: 'main_form', type: 'block', content: {main: 'Bloque 3'}};
-
 		return page;
 	};
+
+	module.saveLayout = function(layout) {
+		page.childrens = layout.layout;
+	}
 
 
 	module.render = function(layout, res) {

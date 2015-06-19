@@ -70,8 +70,7 @@ var tmpModules = ['md2', 'md1', 'form_api', 'util', 'mail_api', 'menu', 'block']
 		res.send(app.modules.util.layout());
 	});
 	app.post('/', function(req, res) {
-		console.log(req.body);
-		//Set Layout
+		app.modules.util.saveLayout(req.body);
 	})
 	
 //});

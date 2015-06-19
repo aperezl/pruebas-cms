@@ -25,7 +25,7 @@
 		margin: 10px 0;
 	}
 	.bq:hover {
-		/*background: #f0f050;*/
+		background: #f0f050;
 	}
 	.section-grid {
 		position: absolute;
@@ -36,7 +36,7 @@
 	}
 
 	.section-grid .col-md-1 .grid-bk {
-		/*background: red;*/
+		background: red;
 		height: 600px;
 		opacity: .25;
 	}
@@ -67,6 +67,18 @@
 	}
 	.micontrol-section {
 		margin-left: -15px;
+	}
+
+	.head {
+		background: #CC5A56;
+	}
+
+	.content {
+		background: #9ED3FF;
+	}
+
+	.foot {
+		background: #AEB24B;
 	}
 
 
@@ -152,6 +164,13 @@
 			'Delete Section'
 		];
 
+		$scope.saveTemplate = function() {
+			layoutService.putLayout($scope.layout).then(function(layout) {
+				alert('Template saved!');
+			});
+			alert('presave');
+		}
+
 		$scope.addZone = function($event, section) {
 			console.log(section);
 			var g = guid();
@@ -159,44 +178,43 @@
 				name: g,
 				childrens: []
 			});
-			layoutService.putLayout($scope.layout).then(function(layout) {
-				console.log(layout);
-			});
 		}
 
 		$scope.deleteZone = function(section, zone) {
-			var index = section.zones.indexOf(zone);
+			var index = section.childrens.indexOf(zone);
 			if(index > -1) {
-				section.zones.splice(index, 1);
+				section.childrens.splice(index, 1);
 			}
 		}
 
 		$scope.addRegion = function(zone, cols) {
 			var g = guid();
-			zone.regions.push({
+			zone.childrens.push({
 				name: g,
-				class: 'col-md-' + cols 
+				attrs: {
+					class: 'col-md-' + cols
+				}
 			});
 		}
 
 		$scope.modRegion = function(zone, region, cols) {
 			console.log(region);
-			region = {
-				name: region.name,
-				class: 'col-md-' + cols
+			var index = zone.childrens.indexOf(region);
+			if(index > -1) {
+				zone.childrens[index] = {
+					name: region.name,
+					attrs: {
+						class: 'col-md-' + cols
+					}
+				};
 			}
-			zone.regions.map(function(v) {
-				if(v.name === region.name) {
-					v.class = 'col-md-' + cols;
-				}
-			});
 			console.log(region);
 		}
 
 		$scope.deleteRegion = function(zone, region) {
-			var index = zone.regions.indexOf(region);
+			var index = zone.childrens.indexOf(region);
 			if(index > -1) {
-				zone.regions.splice(index, 1);
+				zone.childrens.splice(index, 1);
 			} 
 		}
 
@@ -221,7 +239,46 @@
 </head>
 	<body ng-controller="GridCtrl">
 	
+<div class="container" style="margin-bottom: 50px">
+	
+<nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Unuko CMS</a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="#" ng-click="saveTemplate()">Save</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Action</a></li>
+                  <li><a href="#">Another action</a></li>
+                  <li><a href="#">Something else here</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li class="dropdown-header">Nav header</li>
+                  <li><a href="#">Separated link</a></li>
+                  <li><a href="#">One more separated link</a></li>
+                </ul>
+              </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li class="active"><a href="./">Default <span class="sr-only">(current)</span></a></li>
+              <li><a href="../navbar-static-top/">Static top</a></li>
+              <li><a href="../navbar-fixed-top/">Fixed top</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+      </nav>
 
+</div>
 		<section class="section-grid">
 			<div class="container">
 				<div class="row">
@@ -243,8 +300,7 @@
 
 
 		
-		<section ng-repeat="section in layout" ng-click="menuSection($event)" class="{{section.name}} section" style="">
-			<hr />
+		<section ng-repeat="section in layout" ng-click="menuSection($event)" class="{{section.name}} section">
 			<div class="container" sv-root>
 			<div class="micontrol micontrol-section">
 			    <!-- Simple dropdown -->
@@ -253,6 +309,7 @@
 			        Section <span class="glyphicon glyphicon-cog"></span>
 			      </a>
 			      <ul class="dropdown-menu">
+			      <li class="dropdown-header">Section: {{section.name}}</li>
 			        <li>
 			          <a ng-click="addZone($event, section);">New Zone</a>
 			        </li>
@@ -273,7 +330,7 @@
 				        Zone <span class="glyphicon glyphicon-cog"></span>
 				      </a>
 				      <ul class="dropdown-menu">
-
+				      	<li class="dropdown-header">Zone: {{zone.name}}</li>
 				        <li class="dropdown-submenu">
 				        	<a href>New Region</a>
 				        	<ul class="dropdown-menu">
@@ -316,6 +373,7 @@
 								      	Region <span class=" glyphicon glyphicon-cog"></span>
 								      </span>
 								      <ul class="dropdown-menu">
+								      	<li class="dropdown-header">Region: {{region.name}}</li>
 								        <li class="dropdown-submenu">
 							        	<a href>Resize Region</a>
 								        	<ul class="dropdown-menu">
