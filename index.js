@@ -13,6 +13,7 @@ app.set('view cache', false);
 
 app.use(express.static('public'));
 app.use(app.contrib.bodyParser.urlencoded({ extended: false }))
+app.use(app.contrib.bodyParser.json());
 
 app.modules = {};
 app.models = {};
@@ -67,6 +68,10 @@ var tmpModules = ['md2', 'md1', 'form_api', 'util', 'mail_api', 'menu', 'block']
 		//var layout = app.modules.util.layout();
 		//app.modules.util.render(layout, res);
 		res.send(app.modules.util.layout());
+	});
+	app.post('/', function(req, res) {
+		console.log(req.body);
+		//Set Layout
 	})
 	
 //});

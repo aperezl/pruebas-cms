@@ -89,51 +89,52 @@
 <script type="text/javascript">
 	var myApp = angular.module('myApp', ['ui.bootstrap', 'angular-sortable-view', 'color.picker']);
 
-	myApp.controller('GridCtrl', function($scope, $modal) {
-		$scope.layout = [
-			{
-				name: 'section-head',
-				zones: []
-			},
-			{
-				name: 'section-content',
-				zones: [
-					{
-						name: 'zone2',
-						regions: [
-							{name: 'r1', class: 'col-md-1'},
-							{name: 'r2', class: 'col-md-1'},
-							{name: 'r3', class: 'col-md-1'}
-						]
-					}
-				]
-			},
-			{
-				name: 'section-foot',
-				zones: [
-					{
-						name: 'zone3',
-						regions: [
-							{name: 'r1', class: 'col-md-4'},
-							{name: 'r2', class: 'col-md-4'},
-							{name: 'r3', class: 'col-md-4'}
-						]
-					},
-					{
-						name: 'zone4',
-						regions: [
-							{name: 'r1', class: 'col-md-12'}
-						]		
-					}
-				]
-			}
-		];
+	myApp.service("layoutService", function( $http, $q ) {
+		// Return public API.
+		return({
+		   getLayout: getLayout,
+		   putLayout: putLayout
+		});
+
+		function getLayout() {
+			 var request = $http({
+                method: "get",
+                url: "/"
+                //params: {
+                //    action: "add"
+                //},
+                //data: {
+                //    name: name
+                //}
+            });
+			 return( request.then(  function(response) {
+			 	return(response.data);
+			 }));
+		};
+
+		function putLayout(layout) {
+			var request = $http({
+				method: 'post',
+				url: '/',
+				data: {
+					layout: layout,
+					a: 'aaa'
+				}
+			});
+			return(request.then(function(response) {
+				console.log('ok')
+				return(response.data);
+			}));
+		}
+	});
+
+	myApp.controller('GridCtrl', function($scope, $modal, layoutService) {
 
 
-		var page = {"name":"page","childrens":[{"name":"head","type":"section","content":{},"childrens":[{"name":"head","type":"zone","content":{},"childrens":[{"name":"head","type":"region","content":{},"attrs":{"class":"col-md-12"}}],"attrs":{"class":"zone row"}}],"attrs":{"class":"clase1 clase2"}},{"name":"content","type":"section","content":{},"childrens":[{"name":"content","type":"zone","content":{},"childrens":[{"name":"sidebar","type":"region","content":{},"childrens":[{"name":"sidebar","type":"block","content":{"main":"Bloque 1"}}],"attrs":{"class":"col-md-4"}},{"name":"main","type":"region","content":{},"childrens":[{"name":"main","type":"block","content":{"main":"<ul as-sortable=\"sortableOptions\" ng-model=\"items\"><li ng-repeat=\"item in items\" as-sortable-item class=\"as-sortable-item\"><div as-sortable-item-handle class=\"as-sortable-item-handle\" style=\"height:50px\"><span data-ng-bind=\"item.name\"></span></div></li></ul>"}}],"attrs":{"class":"col-md-8"}}],"attrs":{"class":"zone row"}}]},{"name":"foot","type":"section","content":{},"childrens":[{"name":"foot","type":"zone","content":{},"childrens":[{"name":"foot","type":"region","content":{},"attrs":{"class":"col-md-12"}}],"attrs":{"class":"zone row"}}]}],"section":{"head":{"name":"head","type":"section","content":{},"childrens":[{"name":"head","type":"zone","content":{},"childrens":[{"name":"head","type":"region","content":{},"attrs":{"class":"col-md-12"}}],"attrs":{"class":"zone row"}}],"attrs":{"class":"clase1 clase2"}},"content":{"name":"content","type":"section","content":{},"childrens":[{"name":"content","type":"zone","content":{},"childrens":[{"name":"sidebar","type":"region","content":{},"childrens":[{"name":"sidebar","type":"block","content":{"main":"Bloque 1"}}],"attrs":{"class":"col-md-4"}},{"name":"main","type":"region","content":{},"childrens":[{"name":"main","type":"block","content":{"main":"<ul as-sortable=\"sortableOptions\" ng-model=\"items\"><li ng-repeat=\"item in items\" as-sortable-item class=\"as-sortable-item\"><div as-sortable-item-handle class=\"as-sortable-item-handle\" style=\"height:50px\"><span data-ng-bind=\"item.name\"></span></div></li></ul>"}}],"attrs":{"class":"col-md-8"}}],"attrs":{"class":"zone row"}}]},"foot":{"name":"foot","type":"section","content":{},"childrens":[{"name":"foot","type":"zone","content":{},"childrens":[{"name":"foot","type":"region","content":{},"attrs":{"class":"col-md-12"}}],"attrs":{"class":"zone row"}}]}},"zone":{"head":{"name":"head","type":"zone","content":{},"childrens":[{"name":"head","type":"region","content":{},"attrs":{"class":"col-md-12"}}],"attrs":{"class":"zone row"}},"content":{"name":"content","type":"zone","content":{},"childrens":[{"name":"sidebar","type":"region","content":{},"childrens":[{"name":"sidebar","type":"block","content":{"main":"Bloque 1"}}],"attrs":{"class":"col-md-4"}},{"name":"main","type":"region","content":{},"childrens":[{"name":"main","type":"block","content":{"main":"<ul as-sortable=\"sortableOptions\" ng-model=\"items\"><li ng-repeat=\"item in items\" as-sortable-item class=\"as-sortable-item\"><div as-sortable-item-handle class=\"as-sortable-item-handle\" style=\"height:50px\"><span data-ng-bind=\"item.name\"></span></div></li></ul>"}}],"attrs":{"class":"col-md-8"}}],"attrs":{"class":"zone row"}},"foot":{"name":"foot","type":"zone","content":{},"childrens":[{"name":"foot","type":"region","content":{},"attrs":{"class":"col-md-12"}}],"attrs":{"class":"zone row"}}},"region":{"head":{"name":"head","type":"region","content":{},"attrs":{"class":"col-md-12"}},"sidebar":{"name":"sidebar","type":"region","content":{},"childrens":[{"name":"sidebar","type":"block","content":{"main":"Bloque 1"}}],"attrs":{"class":"col-md-4"}},"main":{"name":"main","type":"region","content":{},"childrens":[{"name":"main","type":"block","content":{"main":"<ul as-sortable=\"sortableOptions\" ng-model=\"items\"><li ng-repeat=\"item in items\" as-sortable-item class=\"as-sortable-item\"><div as-sortable-item-handle class=\"as-sortable-item-handle\" style=\"height:50px\"><span data-ng-bind=\"item.name\"></span></div></li></ul>"}}],"attrs":{"class":"col-md-8"}},"foot":{"name":"foot","type":"region","content":{},"attrs":{"class":"col-md-12"}}},"block":{"sidebar":{"name":"sidebar","type":"block","content":{"main":"Bloque 1"}},"main":{"name":"main","type":"block","content":{"main":"<ul as-sortable=\"sortableOptions\" ng-model=\"items\"><li ng-repeat=\"item in items\" as-sortable-item class=\"as-sortable-item\"><div as-sortable-item-handle class=\"as-sortable-item-handle\" style=\"height:50px\"><span data-ng-bind=\"item.name\"></span></div></li></ul>"}}}};
 
-		console.log(page.childrens);
-		$scope.layout = page.childrens;
+		var  v = layoutService.getLayout().then(function( layout ) {
+			$scope.layout = layout.childrens;
+		});
 		
 		function guid() {
 		  function s4() {
@@ -154,9 +155,12 @@
 		$scope.addZone = function($event, section) {
 			console.log(section);
 			var g = guid();
-			section.zones.push({
+			section.childrens.push({
 				name: g,
-				regions: []
+				childrens: []
+			});
+			layoutService.putLayout($scope.layout).then(function(layout) {
+				console.log(layout);
 			});
 		}
 
