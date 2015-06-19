@@ -90,24 +90,25 @@
 	var myApp = angular.module('myApp', ['ui.bootstrap', 'angular-sortable-view', 'color.picker']);
 
 	myApp.controller('GridCtrl', function($scope, $modal) {
-		$scope.layout = {
-			section1: {
+		$scope.layout = [
+			{
 				name: 'section-head',
 				zones: []
 			},
-			section2: {
+			{
 				name: 'section-content',
 				zones: [
 					{
 						name: 'zone2',
 						regions: [
-							{name: 'r1', class: 'col-md-3'},
-							{name: 'r2', class: 'col-md-9'}
+							{name: 'r1', class: 'col-md-1'},
+							{name: 'r2', class: 'col-md-1'},
+							{name: 'r3', class: 'col-md-1'}
 						]
 					}
 				]
 			},
-			section3: {
+			{
 				name: 'section-foot',
 				zones: [
 					{
@@ -126,10 +127,14 @@
 					}
 				]
 			}
-		};
+		];
 
 
+		var page = {"name":"page","childrens":[{"name":"head","type":"section","content":{},"childrens":[{"name":"head","type":"zone","content":{},"childrens":[{"name":"head","type":"region","content":{},"attrs":{"class":"col-md-12"}}],"attrs":{"class":"zone row"}}],"attrs":{"class":"clase1 clase2"}},{"name":"content","type":"section","content":{},"childrens":[{"name":"content","type":"zone","content":{},"childrens":[{"name":"sidebar","type":"region","content":{},"childrens":[{"name":"sidebar","type":"block","content":{"main":"Bloque 1"}}],"attrs":{"class":"col-md-4"}},{"name":"main","type":"region","content":{},"childrens":[{"name":"main","type":"block","content":{"main":"<ul as-sortable=\"sortableOptions\" ng-model=\"items\"><li ng-repeat=\"item in items\" as-sortable-item class=\"as-sortable-item\"><div as-sortable-item-handle class=\"as-sortable-item-handle\" style=\"height:50px\"><span data-ng-bind=\"item.name\"></span></div></li></ul>"}}],"attrs":{"class":"col-md-8"}}],"attrs":{"class":"zone row"}}]},{"name":"foot","type":"section","content":{},"childrens":[{"name":"foot","type":"zone","content":{},"childrens":[{"name":"foot","type":"region","content":{},"attrs":{"class":"col-md-12"}}],"attrs":{"class":"zone row"}}]}],"section":{"head":{"name":"head","type":"section","content":{},"childrens":[{"name":"head","type":"zone","content":{},"childrens":[{"name":"head","type":"region","content":{},"attrs":{"class":"col-md-12"}}],"attrs":{"class":"zone row"}}],"attrs":{"class":"clase1 clase2"}},"content":{"name":"content","type":"section","content":{},"childrens":[{"name":"content","type":"zone","content":{},"childrens":[{"name":"sidebar","type":"region","content":{},"childrens":[{"name":"sidebar","type":"block","content":{"main":"Bloque 1"}}],"attrs":{"class":"col-md-4"}},{"name":"main","type":"region","content":{},"childrens":[{"name":"main","type":"block","content":{"main":"<ul as-sortable=\"sortableOptions\" ng-model=\"items\"><li ng-repeat=\"item in items\" as-sortable-item class=\"as-sortable-item\"><div as-sortable-item-handle class=\"as-sortable-item-handle\" style=\"height:50px\"><span data-ng-bind=\"item.name\"></span></div></li></ul>"}}],"attrs":{"class":"col-md-8"}}],"attrs":{"class":"zone row"}}]},"foot":{"name":"foot","type":"section","content":{},"childrens":[{"name":"foot","type":"zone","content":{},"childrens":[{"name":"foot","type":"region","content":{},"attrs":{"class":"col-md-12"}}],"attrs":{"class":"zone row"}}]}},"zone":{"head":{"name":"head","type":"zone","content":{},"childrens":[{"name":"head","type":"region","content":{},"attrs":{"class":"col-md-12"}}],"attrs":{"class":"zone row"}},"content":{"name":"content","type":"zone","content":{},"childrens":[{"name":"sidebar","type":"region","content":{},"childrens":[{"name":"sidebar","type":"block","content":{"main":"Bloque 1"}}],"attrs":{"class":"col-md-4"}},{"name":"main","type":"region","content":{},"childrens":[{"name":"main","type":"block","content":{"main":"<ul as-sortable=\"sortableOptions\" ng-model=\"items\"><li ng-repeat=\"item in items\" as-sortable-item class=\"as-sortable-item\"><div as-sortable-item-handle class=\"as-sortable-item-handle\" style=\"height:50px\"><span data-ng-bind=\"item.name\"></span></div></li></ul>"}}],"attrs":{"class":"col-md-8"}}],"attrs":{"class":"zone row"}},"foot":{"name":"foot","type":"zone","content":{},"childrens":[{"name":"foot","type":"region","content":{},"attrs":{"class":"col-md-12"}}],"attrs":{"class":"zone row"}}},"region":{"head":{"name":"head","type":"region","content":{},"attrs":{"class":"col-md-12"}},"sidebar":{"name":"sidebar","type":"region","content":{},"childrens":[{"name":"sidebar","type":"block","content":{"main":"Bloque 1"}}],"attrs":{"class":"col-md-4"}},"main":{"name":"main","type":"region","content":{},"childrens":[{"name":"main","type":"block","content":{"main":"<ul as-sortable=\"sortableOptions\" ng-model=\"items\"><li ng-repeat=\"item in items\" as-sortable-item class=\"as-sortable-item\"><div as-sortable-item-handle class=\"as-sortable-item-handle\" style=\"height:50px\"><span data-ng-bind=\"item.name\"></span></div></li></ul>"}}],"attrs":{"class":"col-md-8"}},"foot":{"name":"foot","type":"region","content":{},"attrs":{"class":"col-md-12"}}},"block":{"sidebar":{"name":"sidebar","type":"block","content":{"main":"Bloque 1"}},"main":{"name":"main","type":"block","content":{"main":"<ul as-sortable=\"sortableOptions\" ng-model=\"items\"><li ng-repeat=\"item in items\" as-sortable-item class=\"as-sortable-item\"><div as-sortable-item-handle class=\"as-sortable-item-handle\" style=\"height:50px\"><span data-ng-bind=\"item.name\"></span></div></li></ul>"}}}};
 
+		console.log(page.childrens);
+		$scope.layout = page.childrens;
+		
 		function guid() {
 		  function s4() {
 		    return Math.floor((1 + Math.random()) * 0x10000)
@@ -255,7 +260,7 @@
 			</div>
 
 
-				<div ng-repeat="zone in section.zones" class="row bloque" sv-part="zone.regions">
+				<div ng-repeat="zone in section.childrens" class="row bloque" sv-part="zone.regions">
 
 				<div class="micontrol">
 		    		<!-- Simple dropdown -->
@@ -292,7 +297,7 @@
 				    </span>
 				</div>
 
-					<div ng-repeat="region in zone.regions" class="{{region.class}}" sv-element>
+					<div ng-repeat="region in zone.childrens" class="{{region.attrs.class}}" sv-element>
 
 
 

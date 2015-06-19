@@ -65,10 +65,8 @@ var tmpModules = ['md2', 'md1', 'form_api', 'util', 'mail_api', 'menu', 'block']
 
 	app.get('/', function(req, res) {
 		//var layout = app.modules.util.layout();
-		//app.modules.util.layout(layout, res);
-		var layout = app.modules.util.layout();
-		app.modules.util.render(layout, res);
-		//res.send(app.modules.util.layout());
+		//app.modules.util.render(layout, res);
+		res.send(app.modules.util.layout());
 	})
 	
 //});

@@ -2,7 +2,7 @@ module.exports = function(unuko) {
 	var module = {};
 	var page = {
 		name: 'page',
-		childrens: {},
+		childrens: [],
 		section: {},
 		zone: {},
 		region: {},
@@ -23,10 +23,10 @@ module.exports = function(unuko) {
 			content: {} 
 		}
 		if(parent!==undefined) {
-			page[parentType][parent].childrens = page[parentType][parent].childrens || {};
-			page[parentType][parent].childrens[name] = page[type][name];
+			page[parentType][parent].childrens = page[parentType][parent].childrens || [];
+			page[parentType][parent].childrens.push(page[type][name]);
 		} else {
-			page.childrens[name] = page[type][name];
+			page.childrens.push(page[type][name]);
 		}
 	}
 
