@@ -12,6 +12,8 @@
 
 	.bloque {
 		background-color: rgba(255, 255, 255, 0.5);
+		border: 1px dotted #c0c0c0;
+		min-height: 24px;
 	}
 	.bloque:hover {
 		
@@ -20,9 +22,8 @@
 		
 	}
 	.bq {
-		background: #e0e0e0;
-		height: 80px;
-		margin: 10px 0;
+		margin: 2px 0;
+		border: 1px dotted #c0c0c0;
 	}
 	.bq:hover {
 		background: #f0f050;
@@ -38,7 +39,7 @@
 	.section-grid .col-md-1 .grid-bk {
 		background: red;
 		height: 600px;
-		opacity: .25;
+		opacity: .10;
 	}
 
 
@@ -55,18 +56,27 @@
 	}
 
 	.section {
-		min-height: 30px;
+		border: 1px dotted #c0c0c0;
+  		margin: 2px 20px;
+  		min-height: 24px;
+
 	}
 
 	.micontrol {
-		opacity: 0.1;
+		opacity: 1;
 	}
 
 	.micontrol:hover {
 		opacity: 1;
 	}
 	.micontrol-section {
-		margin-left: -15px;
+		position: absolute;
+		left: 21px;
+	}
+
+	.micontrol-zone {
+		position: absolute;
+		left: 46px;
 	}
 
 	.head {
@@ -80,6 +90,7 @@
 	.foot {
 		background: #AEB24B;
 	}
+
 
 
 	.dropdown-submenu{position:relative;}
@@ -145,7 +156,7 @@
 
 
 		var  v = layoutService.getLayout().then(function( layout ) {
-			$scope.layout = layout.childrens;
+			$scope.layout = layout;
 		});
 		
 		function guid() {
@@ -171,9 +182,21 @@
 			alert('presave');
 		}
 
+		$scope.addSection = function() {
+			var g = guid();
+			console.log($scope.layout);
+			$scope.layout.childrens = $scope.layout.childrens || [];
+			$scope.layout.childrens.push({
+				name: g,
+				childrens: []
+			});
+			console.log('Section Added!')
+		}
+
 		$scope.addZone = function($event, section) {
 			console.log(section);
 			var g = guid();
+			section.childrens = section.childrens || [];
 			section.childrens.push({
 				name: g,
 				childrens: []
@@ -208,6 +231,11 @@
 					}
 				};
 			}
+			console.log(region);
+		}
+
+		$scope.addBlock = function(zone, region) {
+			region.content = "blablabla";
 			console.log(region);
 		}
 
@@ -255,19 +283,8 @@
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
               <li class="active"><a href="#">Home</a></li>
+              <li><a href="#" ng-click="addSection()">New Section</a></li>
               <li><a href="#" ng-click="saveTemplate()">Save</a></li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="#">Action</a></li>
-                  <li><a href="#">Another action</a></li>
-                  <li><a href="#">Something else here</a></li>
-                  <li role="separator" class="divider"></li>
-                  <li class="dropdown-header">Nav header</li>
-                  <li><a href="#">Separated link</a></li>
-                  <li><a href="#">One more separated link</a></li>
-                </ul>
-              </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
               <li class="active"><a href="./">Default <span class="sr-only">(current)</span></a></li>
@@ -300,13 +317,13 @@
 
 
 		
-		<section ng-repeat="section in layout" ng-click="menuSection($event)" class="{{section.name}} section">
-			<div class="container" sv-root>
+		<section ng-repeat="section in layout.childrens" ng-click="menuSection($event)" class="{{section.name}} section">
+			
 			<div class="micontrol micontrol-section">
 			    <!-- Simple dropdown -->
 			    <span class="dropdown" dropdown on-toggle="toggled(open)">
 			      <a href class="dropdown-toggle btn btn-default btn-xs" dropdown-toggle>
-			        Section <span class="glyphicon glyphicon-cog"></span>
+			        <span class="glyphicon glyphicon-cog"></span>
 			      </a>
 			      <ul class="dropdown-menu">
 			      <li class="dropdown-header">Section: {{section.name}}</li>
@@ -319,15 +336,15 @@
 			      </ul>
 			    </span>
 			</div>
-
+			<div class="container" sv-root>
 
 				<div ng-repeat="zone in section.childrens" class="row bloque" sv-part="zone.regions">
 
-				<div class="micontrol">
+				<div class="micontrol micontrol-zone">
 		    		<!-- Simple dropdown -->
 				    <span class="dropdown" dropdown on-toggle="toggled(open)">
 				      <a href class="dropdown-toggle btn btn-default btn-xs" dropdown-toggle>
-				        Zone <span class="glyphicon glyphicon-cog"></span>
+				        <span class="glyphicon glyphicon-cog"></span>
 				      </a>
 				      <ul class="dropdown-menu">
 				      	<li class="dropdown-header">Zone: {{zone.name}}</li>
@@ -370,7 +387,7 @@
 						    		<!-- Simple dropdown -->
 								    <span class="dropdown btn btn-default btn-xs" dropdown on-toggle="toggled(open)">
 								      <span href class="dropdown-toggle" dropdown-toggle>
-								      	Region <span class=" glyphicon glyphicon-cog"></span>
+								      	<span class=" glyphicon glyphicon-cog"></span>
 								      </span>
 								      <ul class="dropdown-menu">
 								      	<li class="dropdown-header">Region: {{region.name}}</li>
@@ -394,6 +411,9 @@
 										<li>
 								          <a href ng-click="deleteRegion(zone, region)">Delete Region</a>
 								        </li>
+								        <li>
+								        	<a href ng-click="addBlock(zone, region)">Add Block</a>
+										</li>
 										<li>
 								          <a href>Properties</a>
 								        </li>
@@ -403,6 +423,7 @@
 								    	 <span class="glyphicon glyphicon-move"></span>
 								    </a>
 								   </div>
+								   {{region.content}}
 							</div>
 
 

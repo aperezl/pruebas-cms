@@ -2,11 +2,7 @@ module.exports = function(unuko) {
 	var module = {};
 	var page = {
 		name: 'page',
-		childrens: [],
-		section: {},
-		zone: {},
-		region: {},
-		block: {}
+		childrens: []
 	};
 
 	module.info = function() {
@@ -15,6 +11,7 @@ module.exports = function(unuko) {
 		}
 	};
 	module.init = function() {
+/*
 
 		//Creación de las secciones
 		module.sections('head');
@@ -50,7 +47,7 @@ module.exports = function(unuko) {
 		module.attrs('main', 'region', {class: 'col-md-8'});
 		module.attrs('foot', 'region', {class: 'col-md-12'});
 
-
+*/
 	}
 
 	module.item = function(name, type, parent, parentType) {
@@ -93,7 +90,7 @@ module.exports = function(unuko) {
 	};
 
 	module.saveLayout = function(layout) {
-		page.childrens = layout.layout;
+		page = layout.layout;
 	}
 
 

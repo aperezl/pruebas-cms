@@ -63,13 +63,17 @@ var tmpModules = ['md2', 'md1', 'form_api', 'util', 'mail_api', 'menu', 'block']
 		}
 	}
 	app.listen(3000);
-
+	app.get('/demo', function(req, res) {
+		var layout = app.modules.util.layout();
+		app.modules.util.render(layout, res);
+	})
 	app.get('/', function(req, res) {
 		//var layout = app.modules.util.layout();
 		//app.modules.util.render(layout, res);
 		res.send(app.modules.util.layout());
 	});
 	app.post('/', function(req, res) {
+		console.log(req.body);
 		app.modules.util.saveLayout(req.body);
 	})
 	
