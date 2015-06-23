@@ -37,7 +37,7 @@
 	}
 
 	.section-grid .col-md-1 .grid-bk {
-		background: red;
+		/*background: red;*/
 		height: 600px;
 		opacity: .10;
 	}
@@ -107,16 +107,18 @@
 <script src="bower_components/angular-sortable-view/src/angular-sortable-view.js"></script>
 <script src="bower_components/tinycolor/tinycolor.js"></script>
 <script src="bower_components/angularjs-color-picker/angularjs-color-picker.min.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
 
 
 <script type="text/javascript">
-	var myApp = angular.module('myApp', ['ui.bootstrap', 'angular-sortable-view', 'color.picker']);
+	var myApp = angular.module('myApp', ['ui.bootstrap', 'angular-sortable-view', 'color.picker', 'ngSanitize']);
 
 	myApp.service("layoutService", function( $http, $q ) {
 		// Return public API.
 		return({
 		   getLayout: getLayout,
-		   putLayout: putLayout
+		   putLayout: putLayout,
+		   getBlock: getBlock
 		});
 
 		function getLayout() {
@@ -149,11 +151,19 @@
 				return(response.data);
 			}));
 		}
+
+		function getBlock(block) {
+			var request = $http({
+				method: 'get',
+				url: '/getblock/' + block
+			});
+			return (request.then(function(response) {
+				return(response.data);
+			}));
+		}
 	});
 
-	myApp.controller('GridCtrl', function($scope, $modal, layoutService) {
-
-
+	myApp.controller('GridCtrl', function($scope, $modal, $sce, layoutService) {
 
 		var  v = layoutService.getLayout().then(function( layout ) {
 			$scope.layout = layout;
@@ -234,8 +244,10 @@
 			console.log(region);
 		}
 
-		$scope.addBlock = function(zone, region) {
-			region.content = "blablabla";
+		$scope.addBlock = function(zone, region, block) {
+			var  v = layoutService.getBlock(block).then(function( layout ) {
+				region.content= layout.html;
+			});
 			console.log(region);
 		}
 
@@ -408,11 +420,14 @@
 								        		<li><a href ng-click="modRegion(zone, region, 12)">12</a></li>
 								        	</ul>
 								        </li>
-										<li>
+										<li class="dropdown-submenu">
 								          <a href ng-click="deleteRegion(zone, region)">Delete Region</a>
 								        </li>
-								        <li>
-								        	<a href ng-click="addBlock(zone, region)">Add Block</a>
+								        <li class="dropdown-submenu">
+								        	<a href>Add Block</a>
+								        	<ul class="dropdown-menu">
+								        		<li><a href ng-click="addBlock(zone, region, 'navbar')">Navbar</a></li>
+								        	</ul>
 										</li>
 										<li>
 								          <a href>Properties</a>
@@ -423,7 +438,7 @@
 								    	 <span class="glyphicon glyphicon-move"></span>
 								    </a>
 								   </div>
-								   {{region.content}}
+								   <div ng-bind-html="region.content"></div>
 							</div>
 
 
@@ -433,7 +448,6 @@
 				</div>
 			</div>
 		</section>
-
 
     <script type="text/ng-template" id="myModalContent.html">
         <div class="modal-header">
