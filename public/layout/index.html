@@ -138,6 +138,7 @@
 		};
 
 		function putLayout(layout) {
+			console.log(layout);
 			var request = $http({
 				method: 'post',
 				url: '/',
@@ -167,6 +168,23 @@
 
 		var  v = layoutService.getLayout().then(function( layout ) {
 			$scope.layout = layout;
+			for(var section_index in layout.childrens) {
+				var section = layout.childrens[section_index];
+				for(var zone_index in section.childrens) {
+					var zone = section.childrens[zone_index];
+					for(var region_index in zone.childrens) {
+						var region = zone.childrens[region_index];
+						for(var block in region.blocks) {
+							console.log(region.blocks[block].name);
+							var  v = layoutService.getBlock(region.blocks[block].name).then(function( layout ) {
+								region.content = $sce.trustAsHtml(layout.html);
+								console.log(layout);
+							});
+							
+						}
+					}
+				}
+			}
 		});
 		
 		function guid() {
@@ -245,8 +263,11 @@
 		}
 
 		$scope.addBlock = function(zone, region, block) {
+			var index = zone.childrens.indexOf(region);
 			var  v = layoutService.getBlock(block).then(function( layout ) {
-				region.content= layout.html;
+				zone.childrens[index].content = $sce.trustAsHtml(layout.html);
+				zone.childrens[index].blocks = zone.childrens[index].blocks || [];
+				zone.childrens[index].blocks.push({name: block});
 			});
 			console.log(region);
 		}
@@ -427,6 +448,7 @@
 								        	<a href>Add Block</a>
 								        	<ul class="dropdown-menu">
 								        		<li><a href ng-click="addBlock(zone, region, 'navbar')">Navbar</a></li>
+								        		<li><a href ng-click="addBlock(zone, region, 'formdemo')">Form Demo</a></li>
 								        	</ul>
 										</li>
 										<li>
