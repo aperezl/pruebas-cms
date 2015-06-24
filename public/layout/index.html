@@ -168,6 +168,7 @@
 
 		var  v = layoutService.getLayout().then(function( layout ) {
 			$scope.layout = layout;
+			console.log($scope.layout);
 			for(var section_index in layout.childrens) {
 				var section = layout.childrens[section_index];
 				for(var zone_index in section.childrens) {
@@ -179,6 +180,15 @@
 							var  v = layoutService.getBlock(region.blocks[block].name).then(function( layout ) {
 								region.content = $sce.trustAsHtml(layout.html);
 								console.log(layout);
+								console.log('index->', 
+								$scope.layout.childrens[section_index].childrens[zone_index].childrens[region_index].content
+								);
+								$scope.layout.childrens[section_index].childrens[zone_index].childrens[region_index].content.html = 'aa'
+								
+								//.childrens[region_index]
+								//.content = {};
+
+								'aa';
 							});
 							
 						}
@@ -294,6 +304,16 @@
 		      }
 		    });
 		}
+
+		$scope.pruebainit = function(zone, region) {
+			if(region.blocks !== undefined) {
+				var index = zone.childrens.indexOf(region);
+				var v = layoutService.getBlock(region.blocks[0].name)
+				.then(function(layout) {
+					zone.childrens[index].content = $sce.trustAsHtml(layout.html);
+				});
+			}
+		}
 	 
 	});	
 </script>
@@ -408,7 +428,8 @@
 				    </span>
 				</div>
 
-					<div ng-repeat="region in zone.childrens" class="{{region.attrs.class}}" sv-element>
+					<div ng-repeat="region in zone.childrens" ng-init="a = pruebainit(zone, region);" class="{{region.attrs.class}}" sv-element>
+					--{{a}}--
 
 
 
@@ -460,7 +481,7 @@
 								    	 <span class="glyphicon glyphicon-move"></span>
 								    </a>
 								   </div>
-								   <div ng-bind-html="region.content"></div>
+								   <div ng-bind-html="region.content.html"></div>
 							</div>
 
 
