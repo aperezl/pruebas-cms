@@ -50,6 +50,8 @@ module.exports = function(unuko) {
 					}
 
 					var layout = unuko.modules.util.layout();
+					console.log(layout);
+					/*
 					layout.childrens['foot'].childrens['form'] = {
 						name: 'main_form',
 						type: 'table',
@@ -58,7 +60,7 @@ module.exports = function(unuko) {
 							headers: ['name', 'version', 'description', 'deps', 'help', 'permissions'],
 							rows: rows
 						}
-					};
+					};*/
 					unuko.modules.util.render(layout, res);
 				}
 			}

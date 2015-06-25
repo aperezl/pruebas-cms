@@ -2,7 +2,10 @@ module.exports = function(unuko) {
 	var module = {};
 	var page = {
 		name: 'page',
-		childrens: []
+		childrens: [],
+		section: {},
+		zone: {},
+		region: {}
 	};
 
 	module.info = function() {
@@ -11,7 +14,7 @@ module.exports = function(unuko) {
 		}
 	};
 	module.init = function() {
-/*
+
 
 		//Creación de las secciones
 		module.sections('head');
@@ -30,7 +33,7 @@ module.exports = function(unuko) {
 		module.regions('foot', 'foot');
 
 
-
+		/*
 		module.blocks('sidebar', 'sidebar',  {main: 'Bloque 1'});
 		module.blocks('main', 'main', {main: '<ul as-sortable="sortableOptions" ng-model="items"><li ng-repeat="item in items" as-sortable-item class="as-sortable-item"><div as-sortable-item-handle class="as-sortable-item-handle" style="height:50px"><span data-ng-bind="item.name"></span></div></li></ul>'});
 
@@ -43,11 +46,11 @@ module.exports = function(unuko) {
 		module.attrs('foot', 'zone', {class: 'zone row'});
 
 		module.attrs('head', 'region', {class: 'col-md-12'});
-		module.attrs('sidebar', 'region', {class: 'col-md-4'});
+		//module.attrs('sidebar', 'region', {class: 'col-md-4'});
 		module.attrs('main', 'region', {class: 'col-md-8'});
 		module.attrs('foot', 'region', {class: 'col-md-12'});
 
-*/
+		*/
 	}
 
 	module.item = function(name, type, parent, parentType) {
